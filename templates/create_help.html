@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}发布求助 - 互助平台{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-white text-center py-4">
+                <h3 class="mb-0">📝 发布求助信息</h3>
+                <p class="text-muted">告诉我们您需要什么帮助</p>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('create_help') }}">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">求助标题 *</label>
+                        <input type="text" class="form-control" id="title" name="title" 
+                               required placeholder="例如：需要帮助阅读药品说明书">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="category" class="form-label">求助类型 *</label>
+                        <select class="form-select" id="category" name="category" required>
+                            <option value="">请选择求助类型</option>
+                            <option value="visual">👁️ 视觉辅助（阅读、识别物品等）</option>
+                            <option value="hearing">👂 听觉支持（手语交流、文字转写等）</option>
+                            <option value="other">💬 其他帮助</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="description" class="form-label">详细描述 *</label>
+                        <textarea class="form-control" id="description" name="description" 
+                                  rows="5" required placeholder="请详细描述您需要帮助的内容..."></textarea>
+                        <div class="form-text">请尽可能详细描述，方便志愿者更好地帮助您</div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">发布求助</button>
+                        <a href="{{ url_for('home') }}" class="btn btn-outline-secondary">取消</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

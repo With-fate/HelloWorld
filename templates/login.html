@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}登录 - 互助平台{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow">
+            <div class="card-header bg-white text-center py-4">
+                <h3 class="mb-0">🔐 用户登录</h3>
+                <p class="text-muted">欢迎回到互助平台</p>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('login') }}">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">用户名</label>
+                        <input type="text" class="form-control" id="username" name="username" 
+                               required autocomplete="username" aria-describedby="usernameHelp">
+                        <div id="usernameHelp" class="form-text">请输入注册时使用的用户名</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password" class="form-label">密码</label>
+                        <input type="password" class="form-control" id="password" name="password" 
+                               required autocomplete="current-password">
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                        <label class="form-check-label" for="remember">记住我</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2">登录</button>
+                </form>
+
+                <hr class="my-4">
+
+                <div class="text-center">
+                    <p class="mb-2">还没有账号？</p>
+                    <a href="{{ url_for('register') }}" class="btn btn-outline-primary w-100">
+                        立即注册
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 辅助功能提示 -->
+        <div class="mt-3 p-3 bg-light rounded">
+            <h6>💡 无障碍提示</h6>
+            <p class="small mb-0">如果您在使用过程中遇到任何障碍，请联系我们：support@huzhu.com</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

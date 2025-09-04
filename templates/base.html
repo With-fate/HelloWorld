@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="残疾人互助平台 - 帮助视觉障碍、聋哑人士获得志愿者支持">
+    <title>{% block title %}互助平台{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- 自定义CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- 无障碍访问支持 -->
+    <style>
+        .skip-to-content {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #007bff;
+            color: white;
+            padding: 8px;
+            z-index: 1000;
+        }
+        .skip-to-content:focus {
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 跳过导航链接（为屏幕阅读器优化） -->
+    <a href="#main-content" class="skip-to-content">跳过导航</a>
+
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('home') }}">
+                <strong>🤝 互助平台</strong>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="切换导航">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('create_help') }}">发布求助</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('help_list') }}">求助列表</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">手语课程</a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav">
+                    {% if current_user %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            👤 {{ current_user.username }}
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#">个人资料</a></li>
+                            <li><a class="dropdown-item" href="#">我的求助</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('logout') }}">退出登录</a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('login') }}">登录</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('register') }}">注册</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 消息闪现 -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="关闭"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- 主内容区域 -->
+    <main id="main-content" class="container my-4">
+        {% block content %}
+        <!-- 子模板的内容将在这里插入 -->
+        {% endblock %}
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>关于我们</h5>
+                    <p>互助平台致力于为残疾人提供及时的帮助和支持，连接需要帮助的人与热心志愿者。</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>快速链接</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('home') }}" class="text-light">首页</a></li>
+                        <li><a href="#" class="text-light">使用指南</a></li>
+                        <li><a href="#" class="text-light">隐私政策</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>联系我们</h5>
+                    <ul class="list-unstyled">
+                        <li>邮箱: support@huzhu.com</li>
+                        <li>电话: 400-123-4567</li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p>&copy; 2024 互助平台. 所有权利保留.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap & jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 自定义JavaScript -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <!-- 无障碍访问增强 -->
+    <script>
+        // 为屏幕阅读器优化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 自动聚焦到主要内容（如果通过跳过导航链接访问）
+            if (window.location.hash === '#main-content') {
+                const mainContent = document.getElementById('main-content');
+                if (mainContent) {
+                    mainContent.setAttribute('tabindex', '-1');
+                    mainContent.focus();
+                }
+            }
+
+            // 添加键盘导航支持
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    document.body.classList.add('keyboard-navigation');
+                }
+            });
+
+            document.addEventListener('mousedown', function() {
+                document.body.classList.remove('keyboard-navigation');
+            });
+        });
+    </script>
+
+    {% block scripts %}
+    <!-- 子模板的JavaScript将在这里插入 -->
+    {% endblock %}
+</body>
+</html>

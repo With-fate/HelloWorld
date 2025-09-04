@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}注册 - 互助平台{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-white text-center py-4">
+                <h3 class="mb-0">👋 欢迎注册</h3>
+                <p class="text-muted">加入我们，帮助需要帮助的人</p>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('register') }}">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="username" class="form-label">用户名 *</label>
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   required minlength="3" maxlength="20" autocomplete="username">
+                            <div class="form-text">3-20个字符，支持字母、数字、下划线</div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">邮箱 *</label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="password" class="form-label">密码 *</label>
+                            <input type="password" class="form-control" id="password" name="password" 
+                                   required minlength="6" autocomplete="new-password">
+                            <div class="form-text">至少6个字符</div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="confirm_password" class="form-label">确认密码 *</label>
+                            <input type="password" class="form-control" id="confirm_password" 
+                                   name="confirm_password" required autocomplete="new-password">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">我是 *</label>
+                        <div class="d-flex gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="user_type" 
+                                       id="user_type_disabled" value="disabled" checked>
+                                <label class="form-check-label" for="user_type_disabled">
+                                    🙋 需要帮助的人
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="user_type" 
+                                       id="user_type_volunteer" value="volunteer">
+                                <label class="form-check-label" for="user_type_volunteer">
+                                    💪 志愿者
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 志愿者额外信息 -->
+                    <div id="volunteerFields" class="mb-3" style="display: none;">
+                        <label class="form-label">我会的技能（可多选）</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="skills" 
+                                           value="visual_assistance" id="skill_visual">
+                                    <label class="form-check-label" for="skill_visual">
+                                        👁️ 视觉辅助
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="skills" 
+                                           value="sign_language_basic" id="skill_sign_basic">
+                                    <label class="form-check-label" for="skill_sign_basic">
+                                        🤟 基础手语
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="skills" 
+                                           value="sign_language_advanced" id="skill_sign_advanced">
+                                    <label class="form-check-label" for="skill_sign_advanced">
+                                        👐 熟练手语
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="skills" 
+                                           value="general_help" id="skill_general">
+                                    <label class="form-check-label" for="skill_general">
+                                        💬 一般帮助
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="agree_terms" name="agree_terms" required>
+                        <label class="form-check-label" for="agree_terms">
+                            我同意 <a href="#">服务条款</a> 和 <a href="#">隐私政策</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 py-2">注册账号</button>
+                </form>
+
+                <hr class="my-4">
+
+                <div class="text-center">
+                    <p class="mb-0">已有账号？</p>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-secondary w-100 mt-2">
+                        立即登录
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+// 显示/隐藏志愿者字段
+document.addEventListener('DOMContentLoaded', function() {
+    const disabledRadio = document.getElementById('user_type_disabled');
+    const volunteerRadio = document.getElementById('user_type_volunteer');
+    const volunteerFields = document.getElementById('volunteerFields');
+
+    function toggleVolunteerFields() {
+        volunteerFields.style.display = volunteerRadio.checked ? 'block' : 'none';
+    }
+
+    disabledRadio.addEventListener('change', toggleVolunteerFields);
+    volunteerRadio.addEventListener('change', toggleVolunteerFields);
+    
+    // 初始化状态
+    toggleVolunteerFields();
+});
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,10 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block title %}首页 - 互助平台{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <!-- 欢迎区域 -->
+        <div class="hero-section bg-light p-5 rounded-3 mb-4">
+            <h1 class="display-4">🤝 欢迎来到互助平台</h1>
+            <p class="lead">连接需要帮助的人与热心志愿者，让关爱无障碍传递</p>
+            <hr class="my-4">
+            <p>我们为视觉障碍、聋哑人士提供实时帮助，并为志愿者提供手语学习资源</p>
+            
+            {% if not current_user.is_authenticated %}
+            <div class="mt-4">
+                <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg me-3">立即注册</a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">登录</a>
+            </div>
+            {% else %}
+            <div class="mt-4">
+                <a href="{{ url_for('create_help') }}" class="btn btn-success btn-lg me-3">
+                    📝 发布求助
+                </a>
+                <a href="{{ url_for('help_list') }}" class="btn btn-outline-primary btn-lg">
+                    🔍 查看求助
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- 功能特色 -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <div class="fs-1 mb-3">👁️</div>
+                        <h5>视觉辅助</h5>
+                        <p>为视障人士提供实时视频帮助，识别物品、阅读文字</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <div class="fs-1 mb-3">👂</div>
+                        <h5>听觉支持</h5>
+                        <p>为聋哑人士提供文字聊天和手语视频交流</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <div class="fs-1 mb-3">📚</div>
+                        <h5>手语学习</h5>
+                        <p>免费的手语课程，帮助志愿者更好地沟通</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- 最新求助 -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">📋 最新求助</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_helps %}
+                <div class="list-group">
+                    {% for help in recent_helps %}
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ help.title }}</h6>
+                            <small class="text-muted">{{ help.created_at|time_ago }}</small>
+                        </div>
+                        <p class="mb-1 text-truncate">{{ help.description }}</p>
+                        <small class="badge bg-{{ 'success' if help.category == 'visual' else 'info' }}">
+                            {{ '视觉辅助' if help.category == 'visual' else '听觉支持' }}
+                        </small>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">暂无求助信息</p>
+                {% endif %}
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('help_list') }}" class="btn btn-sm btn-outline-primary">查看全部</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 快速统计 -->
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">📊 平台统计</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="fs-3 fw-bold text-primary">128</div>
+                        <small class="text-muted">注册用户</small>
+                    </div>
+                    <div class="col-6">
+                        <div class="fs-3 fw-bold text-success">56</div>
+                        <small class="text-muted">成功帮助</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

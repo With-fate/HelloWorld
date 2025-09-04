@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}求助列表 - 互助平台{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>📋 求助列表</h2>
+    <a href="{{ url_for('create_help') }}" class="btn btn-primary">
+        ➕ 发布新求助
+    </a>
+</div>
+
+<!-- 筛选器 -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">求助类型</label>
+                <select class="form-select" name="category">
+                    <option value="">全部类型</option>
+                    <option value="visual" {% if request.args.get('category') == 'visual' %}selected{% endif %}>
+                        视觉辅助
+                    </option>
+                    <option value="hearing" {% if request.args.get('category') == 'hearing' %}selected{% endif %}>
+                        听觉支持
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">状态</label>
+                <select class="form-select" name="status">
+                    <option value="">全部状态</option>
+                    <option value="pending" {% if request.args.get('status') == 'pending' %}selected{% endif %}>
+                        待帮助
+                    </option>
+                    <option value="accepted" {% if request.args.get('status') == 'accepted' %}selected{% endif %}>
+                        已接受
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-outline-primary me-2">筛选</button>
+                <a href="{{ url_for('help_list') }}" class="btn btn-outline-secondary">重置</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 求助列表 -->
+{% if help_requests %}
+<div class="row">
+    {% for help in help_requests %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card help-card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span class="badge bg-{{ 'success' if help.category == 'visual' else 'info' }}">
+                    {{ '视觉辅助' if help.category == 'visual' else '听觉支持' }}
+                </span>
+                <span class="badge bg-{{ 'warning' if help.status == 'pending' else 'success' }}">
+                    {{ '待帮助' if help.status == 'pending' else '已接受' }}
+                </span>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ help.title }}</h5>
+                <p class="card-text text-truncate-3">{{ help.description }}</p>
+                
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <small class="text-muted">
+                        {{ help.author.username }} · {{ help.created_at|time_ago }}
+                    </small>
+                    
+                    {% if current_user and current_user.user_type == 'volunteer' and help.status == 'pending' %}
+                    <button class="btn btn-sm btn-outline-primary">提供帮助</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- 分页 -->
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        <li class="page-item disabled">
+            <a class="page-link" href="#">上一页</a>
+        </li>
+        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+            <a class="page-link" href="#">下一页</a>
+        </li>
+    </ul>
+</nav>
+
+{% else %}
+<div class="text-center py-5">
+    <div class="fs-1 mb-3">📭</div>
+    <h4>暂无求助信息</h4>
+    <p class="text-muted">目前还没有人发布求助，您可以成为第一个</p>
+    <a href="{{ url_for('create_help') }}" class="btn btn-primary">发布求助</a>
+</div>
+{% endif %}
+{% endblock %}
